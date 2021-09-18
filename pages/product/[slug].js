@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 import NextLink from "next/link"
 import Image from "next/image"
 import {
@@ -15,13 +15,24 @@ import Layout from "../../components/Layout"
 import useStyles from "../../utils/styles"
 import db from "../../utils/db"
 import Product from "../../models/Product"
+import { Store } from "../../utils/Store"
 
 export default function ProductScreen(props) {
+  const { dispatch } = useContext(Store)
   const { product } = props
   const classes = useStyles()
 
   if (!product) {
     return <div>Product Not Found</div>
+  }
+
+  const addToCardHandler = async () => {
+    const { data } = await axios.get(`/api/products/${product._id}`)
+    if (data.countInStock <= 0) {
+      window.alert("sorry. product out of stock")
+      return
+    }
+    dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity: 1 } })
   }
 
   return (
@@ -94,7 +105,12 @@ export default function ProductScreen(props) {
                 </Grid>
               </ListItem>
               <ListItem>
-                <Button fullWidth variant="contained" color="primary">
+                <Button
+                  onClick={addToCardHandler}
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                >
                   Add to cart
                 </Button>
               </ListItem>
