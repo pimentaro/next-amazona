@@ -16,6 +16,7 @@ import useStyles from "../../utils/styles"
 import db from "../../utils/db"
 import Product from "../../models/Product"
 import { Store } from "../../utils/Store"
+import axios from "axios"
 
 export default function ProductScreen(props) {
   const { dispatch } = useContext(Store)
