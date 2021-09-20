@@ -20,8 +20,9 @@ import Layout from "../components/Layout"
 import { Store } from "../utils/Store"
 import NextLink from "next/link"
 import Image from "next/image"
+import dynamic from "next/dynamic"
 
-export default function CartScreen() {
+function CartScreen() {
   const { state } = useContext(Store)
   const {
     cart: { cartItems },
@@ -37,7 +38,7 @@ export default function CartScreen() {
         </div>
       ) : (
         <Grid container>
-          <Grid item md={9} xs={12}>
+          <Grid item={true} md={9} xs={12}>
             <TableContainer>
               <Table>
                 <TableHead>
@@ -82,7 +83,7 @@ export default function CartScreen() {
                       </TableCell>
                       <TableCell align="right">${item.price}</TableCell>
                       <TableCell align="right">
-                        <Button variant="contained" color="secodary">
+                        <Button variant="contained" color="secondary">
                           x
                         </Button>
                       </TableCell>
@@ -92,7 +93,7 @@ export default function CartScreen() {
               </Table>
             </TableContainer>
           </Grid>
-          <Grid md={3} xs={12}>
+          <Grid item={true} md={3} xs={12}>
             <Card>
               <List>
                 <ListItem>
@@ -115,3 +116,5 @@ export default function CartScreen() {
     </Layout>
   )
 }
+
+export default dynamic(() => Promise.resolve(CartScreen), { ssr: false })
