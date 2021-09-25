@@ -21,7 +21,7 @@ export default function Home(props) {
     <Layout>
       <div>
         <h1>products</h1>
-        <Grid container>
+        <Grid container spacing={3}>
           {data.products.map((product) => (
             <Grid item={true} md={4} key={product.name}>
               <Card>
