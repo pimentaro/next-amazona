@@ -21,15 +21,18 @@ import { Store } from "../utils/Store"
 
 export default function Home(props) {
   const router = useRouter()
-  const { dispatch } = useContext(Store)
+  const { dispatch, state } = useContext(Store)
   const { products } = props
+
   const addToCartHandler = async (product) => {
+    const existItem = state.cart.cartItems.find((x) => x._id === product._id)
+    const quantity = existItem ? existItem.quantity + 1 : 1
     const { data } = await axios.get(`/api/products/${product._id}`)
-    if (data.countInStock <= 0) {
+    if (data.countInStock < 0) {
       window.alert("sorry. product out of stock")
       return
     }
-    dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity: 1 } })
+    dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity } })
     router.push("/cart")
   }
   return (
@@ -37,7 +40,7 @@ export default function Home(props) {
       <div>
         <h1>products</h1>
         <Grid container spacing={3}>
-          {data.products.map((product) => (
+          {products.map((product) => (
             <Grid item={true} md={4} key={product.name}>
               <Card>
                 <NextLink href={`/product/${product.slug}`} passHref>

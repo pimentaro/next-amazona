@@ -30,13 +30,14 @@ function CartScreen() {
   } = state
   const updateCartHandler = async (item, quantity) => {
     const { data } = await axios.get(`/api/products/${item._id}`)
-    if (data.countInStock <= 0) {
+    if (data.countInStock < quantity) {
       window.alert("sorry. product out of stock")
       return
     }
     dispatch({ type: "CART_ADD_ITEM", payload: { ...item, quantity } })
   }
   const removeItemHandler = (item) => {
+    console.log("tste")
     dispatch({ type: "CART_REMOVE_ITEM", payload: item })
   }
   return (
