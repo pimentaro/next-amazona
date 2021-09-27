@@ -12,6 +12,9 @@ import {
   CssBaseline,
   Switch,
   Badge,
+  Button,
+  Menu,
+  MenuItem,
 } from "@material-ui/core"
 import useStyles from "../utils/styles"
 import NextLink from "next/link"
@@ -19,7 +22,7 @@ import { Store } from "../utils/Store"
 
 export default function Layout({ children, title, description }) {
   const { state, dispatch } = useContext(Store)
-  const { darkMode, cart } = state
+  const { darkMode, cart, userInfo } = state
   const classes = useStyles()
   const darkModeChangeHandler = () => {
     dispatch({ type: darkMode ? "DARK_MODE_OFF" : "DARK_MODE_ON" })
@@ -85,9 +88,35 @@ export default function Layout({ children, title, description }) {
                   )}
                 </Link>
               </NextLink>
-              <NextLink href="/login" passHref>
-                <Link>Login</Link>
-              </NextLink>
+              {userInfo ? (
+                <>
+                  <Button
+                    aria-controls="simple-menu"
+                    aria-haspopup="true"
+                    onClick={loginClickHandler}
+                    className={classes.navbarButton}
+                  >
+                    {userInfo.name}
+                  </Button>
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <MenuItem onClick={loginMenuCloseHandler}>Profile</MenuItem>
+                    <MenuItem onClick={loginMenuCloseHandler}>
+                      My account
+                    </MenuItem>
+                    <MenuItem onClick={loginMenuCloseHandler}>Logout</MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <NextLink href="/login" passHref>
+                  <Link>Login</Link>
+                </NextLink>
+              )}
             </div>
           </Toolbar>
         </AppBar>
